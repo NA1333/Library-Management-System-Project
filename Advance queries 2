@@ -1,0 +1,39 @@
+1. Find the Longest Outstanding Loan
+This query finds the book that has been issued for the longest time without being returned.
+
+SELECT M.Name AS MemberName, B.Title AS BookTitle, IB.IssueDate, 
+       DATEDIFF(CURRENT_DATE, IB.IssueDate) AS DaysOutstanding
+FROM IssuedBooks IB
+JOIN Members M ON IB.MemberID = M.MemberID
+JOIN Books B ON IB.BookID = B.BookID
+WHERE IB.Returned = 0
+ORDER BY DaysOutstanding DESC
+LIMIT 1;
+2. Books Issued by Category
+This query returns the count of books issued per category.
+
+SELECT C.CategoryName, COUNT(IB.IssueID) AS BooksIssued
+FROM IssuedBooks IB
+JOIN Books B ON IB.BookID = B.BookID
+JOIN Categories C ON B.CategoryID = C.CategoryID
+GROUP BY C.CategoryID;
+3. Top Members Based on Books Issued
+This query retrieves the top members who have issued the most books.
+
+SELECT M.Name, COUNT(IB.IssueID) AS BooksIssued
+FROM IssuedBooks IB
+JOIN Members M ON IB.MemberID = M.MemberID
+GROUP BY M.MemberID
+ORDER BY BooksIssued DESC
+LIMIT 5;
+4. Update Member Information
+This query updates the member information based on a member's ID.
+
+UPDATE Members
+SET Email = 'newemail@example.com', PhoneNumber = '9876543210'
+WHERE MemberID = 3;
+5. Delete Old Records (Archiving)
+This query deletes old issued records where the book has been returned for more than a year (archiving old records).
+
+DELETE FROM IssuedBooks
+WHERE Returned = 1 AND ReturnDate < DATE_SUB(CURRENT_DATE, INTERVAL 1 YEAR);
