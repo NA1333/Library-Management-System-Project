@@ -1,0 +1,49 @@
+1. List All Books Issued by a Specific Member
+This query shows all the books issued by a specific member, including the member's name, book title, and issue date.
+
+SELECT M.Name AS MemberName, B.Title AS BookTitle, IB.IssueDate, IB.ReturnDate, IB.Returned
+FROM IssuedBooks IB
+JOIN Members M ON IB.MemberID = M.MemberID
+JOIN Books B ON IB.BookID = B.BookID
+WHERE M.Name = 'John Doe';
+Advanced Feature: This query involves JOIN operations between the Members, Books, and IssuedBooks tables, along with a filtering condition for a specific member.
+2. List Overdue Books and Fines
+This query lists all books that are overdue for return. You can also calculate fines based on the number of overdue days ($1 per day).
+
+SELECT M.Name AS MemberName, B.Title AS BookTitle, IB.IssueDate, IB.ReturnDate, DATEDIFF(CURRENT_DATE, IB.ReturnDate) AS DaysOverdue,
+       CASE 
+           WHEN DATEDIFF(CURRENT_DATE, IB.ReturnDate) > 0 THEN DATEDIFF(CURRENT_DATE, IB.ReturnDate) * 1
+           ELSE 0
+       END AS FineAmount
+FROM IssuedBooks IB
+JOIN Members M ON IB.MemberID = M.MemberID
+JOIN Books B ON IB.BookID = B.BookID
+WHERE IB.Returned = 0 AND IB.ReturnDate < CURRENT_DATE;
+Advanced Feature: Use of DATEDIFF() to calculate overdue days and a CASE statement to compute fines.
+3. Most Popular Books (Books Issued the Most)
+This query retrieves the top books based on the number of times they've been issued.
+SELECT B.Title, COUNT(IB.IssueID) AS TimesIssued
+FROM IssuedBooks IB
+JOIN Books B ON IB.BookID = B.BookID
+GROUP BY B.BookID
+ORDER BY TimesIssued DESC
+LIMIT 5;
+Advanced Feature: This query uses GROUP BY and COUNT() to aggregate data, along with ORDER BY and LIMIT to get the top results.
+4. List Members Who Have Not Returned Books
+This query lists members who have books that are still issued (i.e., not returned).
+
+SELECT M.Name, M.Email, B.Title, IB.IssueDate, IB.ReturnDate
+FROM IssuedBooks IB
+JOIN Members M ON IB.MemberID = M.MemberID
+JOIN Books B ON IB.BookID = B.BookID
+WHERE IB.Returned = 0;
+Advanced Feature: This query includes a condition that filters records based on the Returned status.
+5. Books Availability Status
+This query provides a report showing each book's availability status, including the number of copies available and the total number of copies.
+
+SELECT B.Title, B.Copies, B.AvailableCopies, 
+    CASE 
+        WHEN B.AvailableCopies > 0 THEN 'Available'
+        ELSE 'Not Available'
+    END AS AvailabilityStatus
+FROM Books B;
