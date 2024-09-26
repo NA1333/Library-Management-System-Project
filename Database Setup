@@ -1,7 +1,5 @@
 2. SQL Code for the Library Management System-
 2.1. Create Database
-sql
-Copy code
 CREATE DATABASE LibraryManagement;
 USE LibraryManagement;
 2.2. Create Tables
@@ -39,10 +37,4 @@ Categories Table:
 CREATE TABLE Categories (
     CategoryID INT AUTO_INCREMENT PRIMARY KEY,
     CategoryName VARCHAR(100) NOT NULL
-);
-Librarians Table:
-CREATE TABLE Librarians (
-    LibrarianID INT AUTO_INCREMENT PRIMARY KEY,
-    Username VARCHAR(50) NOT NULL,
-    Password VARCHAR(100) NOT NULL
 );
